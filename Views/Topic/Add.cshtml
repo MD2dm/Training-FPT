@@ -1,0 +1,81 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@model TrainingFPTCo.Models.TopicDetail
+
+@{
+    ViewData["title"] = "Add Topic";
+    ViewData["breadcrumb"] = "Home";
+    ViewData["breadcrumb_active"] = "Add New Topic";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <h3> Add new Topic page !</h3>
+        <a class="btn btn-primary" href="@Url.Action("Index", "Topic")">  Back to List Topics</a>
+        <div class="card mt-5">
+            <div class="card-header">
+                <h5>Create Topic</h5>
+            </div>
+            <div class="card-body">
+                <form enctype="multipart/form-data" method="post" asp-action="Add">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Name"></label>
+                                <input type="text" class="form-control" asp-for="Name" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="CourseId">Courses</label>
+                                <select
+                                    asp-for="CourseId"
+                                    class="form-control"
+                                    asp-items="@(new SelectList(ViewBag.Courses, "Value", "Text"))"></select>
+                                <span asp-validation-for="CourseId" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="Description"></label>
+                                <textarea rows="5" asp-for="Description" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="TypeDocument">Type Document</label>
+                                <input class="form-control" type="text" asp-for="TypeDocument" />
+                                <span asp-validation-for="TypeDocument" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="Status"></label>
+                                <select asp-for="Status" class="form-control">
+                                    <option value="Active"> Active</option>
+                                    <option value="Deactive"> Deactive</option>
+                                </select>
+                                <span asp-validation-for="Status"></span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group mb-3">
+                                <label asp-for="Documents"></label>
+                                <input type="file" asp-for="Documents" class="form-control" />
+                                <span asp-validation-for="Documents" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="AttachFiles"></label>
+                                <input type="file" asp-for="AttachFiles" class="form-control" />
+                                <span asp-validation-for="AttachFiles"></span>
+                            </div>
+                             <div class="form-group mb-3">
+                                <label asp-for="PosterTopic">Poster Topic</label>
+                                <input class="form-control" type="file" asp-for="PosterTopic" />
+                                <span asp-validation-for="PosterTopic" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="my-3 btn btn-primary"> Save </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

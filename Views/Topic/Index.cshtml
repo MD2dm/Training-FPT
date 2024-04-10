@@ -1,0 +1,149 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@model TrainingFPTCo.Models.TopicViewModel
+
+@{
+    ViewData["title"] = "Topics";
+    ViewData["breadcrumb"] = "Home";
+    ViewData["breadcrumb_active"] = "Topics";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+
+    bool saveStatus   = Convert.ToBoolean(TempData["saveStatus"]);
+    bool updateStatus = Convert.ToBoolean(TempData["updateStatus"]);
+    // lay ra giay o thoi diem hien tai
+    var Timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
+}
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <h3 class="text-center"> List Topics</h3>
+        <a class="btn btn-primary" href="@Url.Action("Add", "Topic")"> Add new Topic</a>
+        <form asp-action="Index" method="get" class="my-3">
+            <div class="form-actions no-color">
+                <p class="mb-0">
+                    Find by Name:<input value="@ViewData["currentFilter"]" type="text" name="SearchString" />
+                    <span> | </span>
+                    <select name="FilterStatus">
+                        <option value=""> -- Status --</option>
+                        @if (ViewBag.FilterStatus == "Active")
+                        {
+                            <option value="Active" selected="selected"> Active </option>
+                        }
+                        else
+                        {
+                            <option value="Active"> Active </option>
+                        }
+                        @if (ViewBag.FilterStatus == "Deactive")
+                        {
+                            <option value="Deactive" selected="selected"> Deactive </option>
+                        }
+                        else
+                        {
+                            <option value="Deactive"> Deactive </option>
+                        }
+                    </select>
+                    <span> | </span>
+                    <button type="submit" class="btn btn-primary btn-sm mb-0"> Filter and Search </button>
+                    <span> | </span>
+                    <a asp-action="Index"> Back To list </a>
+                </p>
+            </div>
+        </form>
+        @if (TempData["saveStatus"] != null)
+        {
+            @if (saveStatus)
+            {
+                <div class="text-success my-3"> Add Successfully</div>   
+            }
+            else
+            {
+                <div class="text-danger my-3"> Add Failure</div>
+            }
+        }
+        @if (TempData["updateStatus"] != null)
+        {
+            @if (updateStatus)
+            {
+                <div class="text-success my-3"> Update Successfully</div>
+            }
+            else
+            {
+                <div class="text-danger my-3"> Update Failure</div>
+            }
+        }
+
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="table-primary">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Course</th>
+                    <th>AttachFiles</th>
+                    <th>Description</th>
+                    <th>Documents</th>
+                    <th>Status</th>
+                    <th>Type Document</th>
+                    <th>Poster Topic</th>
+                    <th width="10%" class="text-center" colspan="2">
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.topicDetails)
+                {
+                    <tr class="row-course-@item.Id">
+                        <td>@item.Id</td>
+                        <td>@item.Name</td>
+                        <td>@item.ViewCourseName</td>
+                        
+                        <td width="15%">
+                            @{
+                                if (!string.IsNullOrWhiteSpace(item.TopicNameFile))
+                                {
+                                    <a class="btn btn-link" href="/uploads/images/@item.TopicNameFile">Dowload Link</a>
+
+                                }
+                            }
+                        </td>
+                        <td>@item.Description</td>
+                        <td>
+                            @{
+                                if (!string.IsNullOrWhiteSpace(item.TopicDocumentFile))
+                                {
+                                    // <a class="btn btn-link" href="/uploads/documents/@item.TopicDocumentFile">@item.TopicDocumentFile</a>
+                                    <iframe src="/uploads/documents/@item.TopicDocumentFile">@item.TopicDocumentFile"></iframe>
+                                }
+                            }
+                        </td>
+                        <td>@item.Status</td>
+                        <td>@item.TypeDocument</td>
+                        <td width="15%">
+                            @{
+                                if (!string.IsNullOrWhiteSpace(item.TopicPosterFile))
+                                {
+                                    // <a class="btn btn-link" href="/uploads/documents/@item.TopicDocumentFile">@item.TopicDocumentFile</a>
+                                    // <iframe  src="/uploads/videos/@item.TopicPosterFile">@item.TopicPosterFile"></iframe>
+                                    <img class="img-fluid img-thumbnail" alt="@item.Name" src="/uploads/videos/@item.TopicPosterFile" />
+                                }
+                            }
+                        
+
+                        </td>
+                        <td>
+                            <a class="btn btn-info btn-sm" href="@Url.Action("Update", "Topic",new {id = item.Id})"> Edit</a>
+                        </td>
+                        <td>
+                            <button id="@item.Id" class="btn btn-danger btn-sm js-delete-topic"> Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section javascripts
+{
+    <script src="/js/topic.js?v=@Timestamp"></script>
+}
